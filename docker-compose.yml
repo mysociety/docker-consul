@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  # PostgreSQL
+  database:
+    image: postgres:9.4.5
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+    volumes:
+      - consul-pgdata:/var/lib/postgresql/data
+
+  # Memcache
+  memcache:
+    image: memcached:1.5.12
+
+  # CONSUL
+  app:
+    image: sagepe/consul:${TAG:-latest}
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    working_dir: /var/www/consul
+    volumes:
+      - ./config/secrets.yml.deploy:/var/www/consul/config/secrets.yml:ro
+      - ./config/database.yml.deploy:/var/www/consul/config/database.yml:ro
+      - ./config/application_custom.rb:/var/www/consul/config/application_custom.rb:ro
+      - ./config/environments/${RAILS_ENV:-production}.rb.deploy:/var/www/consul/config/environments/${RAILS_ENV:-production}.rb:ro
+      - ./log:/var/www/consul/log
+      - consul-system:/var/www/consul/public/system
+    environment:
+      MEMCACHE_SERVERS: "memcache:11211"
+      RAILS_ENV: "${RAILS_ENV:-production}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+      SERVER_NAME: "${SERVER_NAME:-consul.127.0.0.1.nip.io}"
+      RAILS_SERVE_STATIC_FILES: "true"
+      NEW_RELIC_AGENT_ENABLED: "false"
+    depends_on:
+      - database
+      - memcache
+    ports:
+      - "${PORT:-3000}:3000"
+
+volumes:
+  consul-pgdata:
+  consul-system:

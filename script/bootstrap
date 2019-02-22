@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# bootstrap - install and configure any dependencies
+#
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+CONSUL_IMAGE=$(docker-compose config | grep consul: | awk '{ print $NF }')
+
+echo "==> Checking git submodules..."
+git submodule update --init
+
+# TODO: log in to Docker Hub, in some way?
+
+echo "==> Pulling required Docker images, where necessary..."
+docker-compose pull database
+docker-compose pull memcache
+
+echo "==> Checking for local copy of ${CONSUL_IMAGE}..."
+if docker inspect --type=image $CONSUL_IMAGE >/dev/null 2>&1 ; then
+  echo "==> Local copy found."
+else
+  echo "==> Local copy not found, attempting to pull..."
+  docker-compose pull app
+fi
+
+echo "==> Bootstrap done."

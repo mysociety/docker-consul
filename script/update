@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# update - update the project following a pull
+#
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Check to see if we've got a specific context.
+export CONTEXT=${CONTEXT:-all}
+
+# Check for Swarm mode.
+SWARM=$(docker info 2>/dev/null | grep ^Swarm | awk '{ print $NF }')
+
+if [ "$CONTEXT" = "build" ]; then
+  script/setup
+else
+
+  # Run bootstrap, passing through conext.
+  script/bootstrap
+
+  echo "==> Checking CONSUL submodule for local changes..."
+  cd consul
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "==> WARNING local changes found!"
+  else
+    echo "==> None found."
+  fi
+  cd ..
+
+  if [ "$SWARM" = "inactive" ] ; then
+    echo "==> Running in compose mode (Swarm mode is ${SWARM})."
+
+    echo "==> Bringing down the stack..."
+    docker-compose down
+
+    echo "==> Bring up the database and running migrations...."
+    docker-compose up -d database
+    sleep 5
+    docker-compose run app rake db:migrate
+
+    echo "==> Stopping the database..."
+    docker-compose down
+  else
+    echo "Swarm mode TBC, exiting."
+    exit 1
+  fi
+fi
+
+echo "==> Update complete."

@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# build - build the docker image t
+#
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+BUILD_TAG=${BUILD_TAG:-$(git log -1 --pretty=%h)}
+PUSH_IMAGE=${PUSH_IMAGE:-false}
+
+# We want a build-fresh environment.
+export CONTEXT=build
+script/setup
+
+echo "==> Build target image will be sagape/consul:${BUILD_TAG}."
+if docker inspect --type=image sagape/consul:${BUILD_TAG} >/dev/null 2>&1 ; then
+  echo "==> An image with that tag already exists, aborting."
+  exit 1
+else
+  echo "==> Building image..."
+  docker build -t sagape/consul:${BUILD_TAG} .
+  echo "==> Tagging as lastest..."
+  docker tag sagape/consul:${BUILD_TAG} sagepe/consul:latest
+  if [ "$PUSH_IMAGE" = "true" ]; then
+    echo "==> Pushing image to Docker Hub..."
+    docker push sagape/consul:${BUILD_TAG}
+    docker push sagepe/consul:latest
+  fi
+
+fi

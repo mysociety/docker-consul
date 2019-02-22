@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# test - run test suite
+#
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+docker-compose config

@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# setup - clean slate for the project
+#
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Check to see if we've got a specific context.
+export CONTEXT=${CONTEXT:-all}
+
+# run bootstrap
+script/bootstrap
+
+# Check for Swarm mode.
+SWARM=$(docker info 2>/dev/null | grep ^Swarm | awk '{ print $NF }')
+
+echo "==> Cleaning up submodules..."
+git submodule foreach git reset --hard
+git submodule foreach git clean -f
+
+if [ "$CONTEXT" != "build" ]; then
+
+  echo "==> Setting up for deployment."
+
+  if  [ "$SWARM" = "inactive" ] ; then
+    echo "==> Running in compose mode (Swarm mode is ${SWARM})."
+
+    echo "==> Removing the stack and any associated volumes..."
+    docker-compose down -v
+
+    echo "==> Initialising the database..."
+    docker-compose up -d database
+    sleep 5
+    docker-compose run app rake db:create
+    docker-compose run app rake db:migrate
+    docker-compose run app rake db:seed
+
+    if [ "$SEED_DB" = "true" ]; then
+      echo "==> Loading test data into database..."
+      docker-compose run -e RAILS_GROUPS=test -e DATABASE_CLEANER_ALLOW_PRODUCTION=true -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true app rake db:dev_seed
+    else
+      echo "==> Not loading seed data into the database. If you want to do this, re-run with SEED_DB=true."
+    fi
+
+    docker-compose down
+
+  else
+    echo "Swarm mode TBC, exiting."
+
+    exit 1
+  fi
+
+fi
+
+echo "==> Setup completed."
