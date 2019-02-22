@@ -42,7 +42,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false
+  # Can be overriden by setting CONFIG_FORCE_SSL to anything accept "true" in the environment.
+  config.force_ssl = ENV['CONFIG_FORCE_SSL'].nil? || ENV['CONFIG_FORCE_SSL'] == "true"
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.

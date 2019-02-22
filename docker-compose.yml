@@ -31,6 +31,7 @@ services:
       SERVER_NAME: "${SERVER_NAME:-consul.127.0.0.1.nip.io}"
       RAILS_SERVE_STATIC_FILES: "true"
       NEW_RELIC_AGENT_ENABLED: "false"
+      CONFIG_FORCE_SSL: "${CONFIG_FORCE_SSL:-true}"
     depends_on:
       - database
       - memcache

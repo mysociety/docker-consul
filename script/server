@@ -24,6 +24,7 @@ if [ "$SWARM" = "inactive" ] ; then
     docker-compose down
   else
     echo "==> Starting the service..."
+    export CONFIG_FORCE_SSL=${CONFIG_FORCE_SSL:-false}
     docker-compose up -d
   fi
 else
