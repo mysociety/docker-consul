@@ -2,6 +2,8 @@
 
 This is an experimental repository for testing ways to deploy a production instance of CONSUL using Docker. The initial use case is to deploy a Production-ready demo instance as a proof-of-concept.
 
+For purposes of disambiguation "CONSUL" here refers to [the citizen participation software](https://github.com/consul/consul) distributed by the [CONSUL Project](http://consulproject.org/) and not the [service discovery software](https://www.consul.io/) from [Hashicorp](https://www.hashicorp.com/).
+
 ## Using this repository
 
 This repository uses a variation on the [Scripts to rule them all](https://github.com/github/scripts-to-rule-them-all) pattern.
