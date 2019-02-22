@@ -15,18 +15,18 @@ export CONTEXT=build
 script/setup
 
 echo "==> Build target image will be sagape/consul:${BUILD_TAG}."
-if docker inspect --type=image sagepe/consul:${BUILD_TAG} >/dev/null 2>&1 ; then
+if docker inspect --type=image mysocietyorg/consul:${BUILD_TAG} >/dev/null 2>&1 ; then
   echo "==> An image with that tag already exists, aborting."
   exit 1
 else
   echo "==> Building image..."
-  docker build -t sagepe/consul:${BUILD_TAG} .
+  docker build -t mysocietyorg/consul:${BUILD_TAG} .
   echo "==> Tagging as lastest..."
-  docker tag sagepe/consul:${BUILD_TAG} sagepe/consul:latest
+  docker tag mysocietyorg/consul:${BUILD_TAG} mysocietyorg/consul:latest
   if [ "$PUSH_IMAGE" = "true" ]; then
     echo "==> Pushing image to Docker Hub..."
-    docker push sagepe/consul:${BUILD_TAG}
-    docker push sagepe/consul:latest
+    docker push mysocietyorg/consul:${BUILD_TAG}
+    docker push mysocietyorg/consul:latest
   fi
 
 fi
