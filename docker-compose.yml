@@ -5,6 +5,8 @@ services:
     image: postgres:9.4.5
     environment:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+      POSTGRES_DB: "${POSTGRES_DB:-consul_development}"
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
     volumes:
       - consul-pgdata:/var/lib/postgresql/data
 
@@ -28,6 +30,10 @@ services:
       MEMCACHE_SERVERS: "memcache:11211"
       RAILS_ENV: "${RAILS_ENV:-production}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+      POSTGRES_PORT: "${POSTGRES_PORT:-5432}"
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+      POSTGRES_DB: "${POSTGRES_DB:-consul_development}"
+      POSTGRES_HOST: "${POSTGRES_HOST:-database}"
       SERVER_NAME: "${SERVER_NAME:-consul.127.0.0.1.nip.io}"
       RAILS_SERVE_STATIC_FILES: "true"
       NEW_RELIC_AGENT_ENABLED: "false"
