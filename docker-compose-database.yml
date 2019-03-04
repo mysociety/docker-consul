@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  app:
+    depends_on:
+      - database
+  database:
+    image: postgres:9.4.5
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+      POSTGRES_DB: "${POSTGRES_DB:-consul_development}"
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+    volumes:
+      - consul-pgdata:/var/lib/postgresql/data
+
+volumes:
+  consul-pgdata:

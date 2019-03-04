@@ -7,4 +7,9 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+echo "==> Testing base compose file..."
 docker-compose config
+
+echo "==> Testing base compose file with database extension..."
+docker-compose -f docker-compose.yml -f docker-compose-database.yml config
+

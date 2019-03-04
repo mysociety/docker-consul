@@ -30,18 +30,19 @@ else
   cd ..
 
   if [ "$SWARM" = "inactive" ] ; then
+    COMPOSE_FILES="-f docker-compose.yml -f docker-compose-database.yml"
     echo "==> Running in compose mode (Swarm mode is ${SWARM})."
 
     echo "==> Bringing down the stack..."
-    docker-compose down
+    docker-compose $COMPOSE_FILES down
 
     echo "==> Bring up the database and running migrations...."
-    docker-compose up -d database
+    docker-compose $COMPOSE_FILES up -d database
     sleep 5
-    docker-compose run app rake db:migrate
+    docker-compose $COMPOSE_FILES run app rake db:migrate
 
     echo "==> Stopping the database..."
-    docker-compose down
+    docker-compose $COMPOSE_FILES down
   else
     echo "Swarm mode TBC, exiting."
     exit 1

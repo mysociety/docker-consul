@@ -1,14 +1,5 @@
 version: '3.7'
 services:
-  # PostgreSQL
-  database:
-    image: postgres:9.4.5
-    environment:
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
-      POSTGRES_DB: "${POSTGRES_DB:-consul_development}"
-      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
-    volumes:
-      - consul-pgdata:/var/lib/postgresql/data
 
   # Memcache
   memcache:
@@ -39,11 +30,9 @@ services:
       NEW_RELIC_AGENT_ENABLED: "false"
       CONFIG_FORCE_SSL: "${CONFIG_FORCE_SSL:-true}"
     depends_on:
-      - database
       - memcache
     ports:
       - "${PORT:-3000}:3000"
 
 volumes:
-  consul-pgdata:
   consul-system:

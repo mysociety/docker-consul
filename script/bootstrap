@@ -15,7 +15,7 @@ git submodule update --init
 # TODO: log in to Docker Hub, in some way?
 
 echo "==> Pulling required Docker images, where necessary..."
-docker-compose pull database
+docker-compose -f docker-compose.yml -f docker-compose-database.yml pull database
 docker-compose pull memcache
 
 echo "==> Checking for local copy of ${CONSUL_IMAGE}..."

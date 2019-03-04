@@ -18,14 +18,15 @@ fi
 SWARM=$(docker info 2>/dev/null | grep ^Swarm | awk '{ print $NF }')
 
 if [ "$SWARM" = "inactive" ] ; then
+  COMPOSE_FILES="-f docker-compose.yml -f docker-compose-database.yml"
   echo "==> Running in compose mode (Swarm mode is ${SWARM})."
   if [ "$1" = "--stop" ]; then
     echo "==> Stopping the service..."
-    docker-compose down
+    docker-compose $COMPOSE_FILES down
   else
     echo "==> Starting the service..."
     export CONFIG_FORCE_SSL=${CONFIG_FORCE_SSL:-false}
-    docker-compose up -d
+    docker-compose $COMPOSE_FILES up -d
   fi
 else
   echo "==> Swarm support TBC."
