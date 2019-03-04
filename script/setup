@@ -33,7 +33,7 @@ if [ "$CONTEXT" != "build" ]; then
     echo "==> Initialising the database..."
     docker-compose up -d database
     sleep 5
-    docker-compose run app rake db:create
+    docker-compose run app rake db:schema:load
     docker-compose run app rake db:migrate
     docker-compose run app rake db:seed
 
