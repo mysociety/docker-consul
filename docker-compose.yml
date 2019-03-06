@@ -9,7 +9,6 @@ x-consul-defaults:
     - ./config/database.yml.deploy:/var/www/consul/config/database.yml:ro
     - ./config/application_custom.rb:/var/www/consul/config/application_custom.rb:ro
     - ./config/environments/${RAILS_ENV:-production}.rb.deploy:/var/www/consul/config/environments/${RAILS_ENV:-production}.rb:ro
-    - ./log:/var/www/consul/log
     - consul-system:/var/www/consul/public/system
   environment:
     MEMCACHE_SERVERS: "memcache:11211"
