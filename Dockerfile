@@ -52,6 +52,9 @@ RUN bundle install --full-index
 # Copy the Rails application into place
 COPY consul .
 
+# Ensure Delayed Job logs to STDOUT.
+RUN sed -i -e 's/Logger\.new(.*)/Logger\.new(STDOUT)/' config/initializers/delayed_job_config.rb
+
 # Compile assets. We're going to need a mock database.yml for the time being.
 ARG RAILS_ENV=production
 ARG ASSETS_PRECOMPILE=true
