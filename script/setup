@@ -48,9 +48,16 @@ if [ "$CONTEXT" != "build" ]; then
     docker-compose $COMPOSE_FILES down
 
   else
-    echo "Swarm mode TBC, exiting."
-
-    exit 1
+    echo "==> Running in Swarm mode."
+    STACK=$(echo $SERVER_NAME | sed -e 's/\./_/g')
+    echo "==> Removing stack ${STACK}..."
+    docker stack rm $STACK
+    sleep 5
+    echo "==> Removing system volume..."
+    docker volume rm ${STACK}_consul-system
+    echo "==> Initialising the database..."
+    docker-compose run app rake db:schema:load
+    docker-compose run app rake db:seed
   fi
 
 fi
