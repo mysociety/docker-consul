@@ -34,13 +34,13 @@ if [ "$CONTEXT" != "build" ]; then
     echo "==> Initialising the database..."
     docker-compose $COMPOSE_FILES up -d database
     sleep 5
-    docker-compose $COMPOSE_FILES run app rake db:schema:load
-    docker-compose $COMPOSE_FILES run app rake db:migrate
-    docker-compose $COMPOSE_FILES run app rake db:seed
+    docker-compose $COMPOSE_FILES run --rm app rake db:schema:load
+    docker-compose $COMPOSE_FILES run --rm app rake db:migrate
+    docker-compose $COMPOSE_FILES run --rm app rake db:seed
 
     if [ "$SEED_DB" = "true" ]; then
       echo "==> Loading test data into database..."
-      docker-compose $COMPOSE_FILES run -e RAILS_GROUPS=test -e DATABASE_CLEANER_ALLOW_PRODUCTION=true -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true app rake db:dev_seed
+      docker-compose $COMPOSE_FILES run --rm -e RAILS_GROUPS=test -e DATABASE_CLEANER_ALLOW_PRODUCTION=true -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true app rake db:dev_seed
     else
       echo "==> Not loading seed data into the database. If you want to do this, re-run with SEED_DB=true."
     fi
@@ -56,8 +56,8 @@ if [ "$CONTEXT" != "build" ]; then
     echo "==> Removing system volume..."
     docker volume rm ${STACK}_consul-system
     echo "==> Initialising the database..."
-    docker-compose run app rake db:schema:load
-    docker-compose run app rake db:seed
+    docker-compose run --rm app rake db:schema:load
+    docker-compose run --rm app rake db:seed
   fi
 
 fi
