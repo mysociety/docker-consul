@@ -49,6 +49,7 @@ if [ "$CONTEXT" != "build" ]; then
 
   else
     echo "==> Running in Swarm mode."
+    source ../env.swarm
     STACK=$(echo $SERVER_NAME | sed -e 's/\./_/g')
     echo "==> Removing stack ${STACK}..."
     docker stack rm $STACK
