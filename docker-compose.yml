@@ -29,6 +29,12 @@ services:
       RAILS_SERVE_STATIC_FILES: "true"
       NEW_RELIC_AGENT_ENABLED: "false"
       CONFIG_FORCE_SSL: "${CONFIG_FORCE_SSL:-true}"
+      CONFIG_SMTP_ENABLE: "${CONFIG_SMTP_ENABLE}"
+      CONFIG_SMTP_ADDRESS: "${CONFIG_SMTP_ADDRESS:-smtp.mysociety.org}"
+      CONFIG_SMTP_PORT: "${CONFIG_SMTP_PORT:-25}"
+      CONFIG_SMTP_USERNAME: "${CONFIG_SMTP_USERNAME}"
+      CONFIG_SMTP_PASSWORD: "${CONFIG_SMTP_PASSWORD}"
+      CONFIG_SMTP_DOMAIN: "${CONFIG_SMTP_HELO:-localhost}"
     depends_on:
       - memcache
     ports:
