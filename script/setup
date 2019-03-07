@@ -54,11 +54,14 @@ if [ "$CONTEXT" != "build" ]; then
     echo "==> Removing stack ${STACK}..."
     docker stack rm $STACK
     sleep 5
-    echo "==> Removing system volume..."
-    docker volume rm ${STACK}_consul-system
+    if docker volume inspect ${STACK}_consul-system >/dev/null 2>&1 ; then
+      echo "==> Removing system volume..."
+      docker volume rm ${STACK}_consul-system
+    fi
     echo "==> Initialising the database..."
-    docker-compose run --rm app rake db:schema:load
-    docker-compose run --rm app rake db:seed
+    docker-compose -p ${STACK} run --rm app rake db:schema:load
+    docker-compose -p ${STACK} run --rm app rake db:seed
+    docker-compose down -v
   fi
 
 fi
