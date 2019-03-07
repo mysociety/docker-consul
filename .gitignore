@@ -1,3 +1,5 @@
 # Ignore any logfiles.
 log/*
 !log/.gitkeep
+images/*
+!images/.gitkeep

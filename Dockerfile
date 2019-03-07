@@ -55,6 +55,9 @@ COPY consul .
 # Ensure Delayed Job logs to STDOUT.
 RUN sed -i -e 's/Logger\.new(.*)/Logger\.new(STDOUT)/' config/initializers/delayed_job_config.rb
 
+# Copy any image overrides in
+COPY images app/assets/images/custom/
+
 # Compile assets. We're going to need a mock database.yml for the time being.
 ARG RAILS_ENV=production
 ARG ASSETS_PRECOMPILE=true

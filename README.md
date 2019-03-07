@@ -61,6 +61,11 @@ Pay particular attention to the `POSTGRES_*` variables for configuring the datab
 | `CONFIG_SMTP_USERNAME` | Username to use for SMTP Auth |
 | `CONFIG_SMTP_PASSWORD` | Password to use for SMTP Auth |
 
+### Custom Images
+Although some images can be added via the GUI, there are a subset [listed in the documentation](https://consul_docs.gitbooks.io/docs/content/en/customization/images.html) that should be included before the asset pre-compilation and therefore built into the image.
+
+Place these into `images/` prior to building the Docker image.
+
 ### Scripts
 Here follows a brief discussion of each script.
 
