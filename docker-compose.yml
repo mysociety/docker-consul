@@ -51,3 +51,7 @@ services:
 
 volumes:
   consul-system:
+
+networks:
+  default:
+    attachable: true
