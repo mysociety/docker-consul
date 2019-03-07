@@ -39,13 +39,23 @@ else
     echo "==> Bring up the database and running migrations...."
     docker-compose $COMPOSE_FILES up -d database
     sleep 5
-    docker-compose $COMPOSE_FILES run app rake db:migrate
+    docker-compose $COMPOSE_FILES run --rm app rake db:migrate
 
     echo "==> Stopping the database..."
     docker-compose $COMPOSE_FILES down
   else
-    echo "Swarm mode TBC, exiting."
-    exit 1
+    echo "==> Running in Swarm mode..."
+    source ../env.swarm
+    STACK=$(echo $SERVER_NAME | sed -e 's/\./_/g')
+    sed -e 's/export //g' ../env.swarm > env.tmp
+    docker run --rm --env-file=env.tmp \
+      --network=consul_staging_mysociety_org_default \
+      --mount type=bind,src=${PWD}/config/secrets.yml.deploy,target=/var/www/consul/config/secrets.yml,readonly=true \
+      --mount type=bind,src=${PWD}/config/database.yml.deploy,target=/var/www/consul/config/database.yml,readonly=true \
+      --mount type=bind,src=${PWD}/config/application_custom.rb,target=/var/www/consul/config/application_custom.rb,readonly=true \
+      mysocietyorg/consul:latest \
+      rake db:migrate
+    rm -f ./env.tmp
   fi
 fi
 
