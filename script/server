@@ -29,5 +29,14 @@ if [ "$SWARM" = "inactive" ] ; then
     docker-compose $COMPOSE_FILES up -d
   fi
 else
-  echo "==> Swarm support TBC."
+  echo "==> Running in Swarm mode..."
+  source ../env.swarm
+  STACK=$(echo $SERVER_NAME | sed -e 's/\./_/g')
+  if [ "$1" = "--stop" ]; then
+    echo "==> Stopping the service..."
+    docker stack rm ${STACK}
+  else
+    echo "==> Deploying the stack..."
+    docker stack deploy -c docker-compose.yml ${STACK}
+  fi
 fi
