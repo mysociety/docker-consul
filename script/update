@@ -53,7 +53,7 @@ else
       --mount type=bind,src=${PWD}/config/secrets.yml.deploy,target=/var/www/consul/config/secrets.yml,readonly=true \
       --mount type=bind,src=${PWD}/config/database.yml.deploy,target=/var/www/consul/config/database.yml,readonly=true \
       --mount type=bind,src=${PWD}/config/application_custom.rb,target=/var/www/consul/config/application_custom.rb,readonly=true \
-      mysocietyorg/consul:latest \
+      mysocietyorg/consul:${TAG:-latest} \
       rake db:migrate
     rm -f ./env.tmp
   fi
