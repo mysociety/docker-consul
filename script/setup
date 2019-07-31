@@ -14,7 +14,7 @@ export CONTEXT=${CONTEXT:-all}
 script/bootstrap
 
 # Check for Swarm mode.
-SWARM=$(docker info 2>/dev/null | grep ^Swarm | awk '{ print $NF }')
+SWARM=$(docker info 2>/dev/null | grep '^ Swarm' | awk '{ print $NF }')
 
 echo "==> Cleaning up submodules..."
 git submodule foreach git reset --hard

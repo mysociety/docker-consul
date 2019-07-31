@@ -15,7 +15,7 @@ if [ "$UPDATE" = "true" ]; then
 fi
 
 # Check for Swarm mode.
-SWARM=$(docker info 2>/dev/null | grep ^Swarm | awk '{ print $NF }')
+SWARM=$(docker info 2>/dev/null | grep '^ Swarm' | awk '{ print $NF }')
 
 if [ "$SWARM" = "inactive" ] ; then
   COMPOSE_FILES="-f docker-compose.yml -f docker-compose-database.yml"

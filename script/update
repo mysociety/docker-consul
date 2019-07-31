@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 export CONTEXT=${CONTEXT:-all}
 
 # Check for Swarm mode.
-SWARM=$(docker info 2>/dev/null | grep ^Swarm | awk '{ print $NF }')
+SWARM=$(docker info 2>/dev/null | grep '^ Swarm' | awk '{ print $NF }')
 
 if [ "$CONTEXT" = "build" ]; then
   script/setup
